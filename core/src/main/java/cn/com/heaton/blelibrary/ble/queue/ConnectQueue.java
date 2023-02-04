@@ -1,6 +1,6 @@
 package cn.com.heaton.blelibrary.ble.queue;
 
-import android.support.annotation.NonNull;
+
 
 import cn.com.heaton.blelibrary.ble.BleLog;
 import cn.com.heaton.blelibrary.ble.model.BleDevice;
@@ -13,7 +13,7 @@ public final class ConnectQueue extends Queue{
     private ConnectQueue() {
     }
 
-    @NonNull
+
     public static ConnectQueue getInstance() {
         if (sInstance != null) {
             return sInstance;

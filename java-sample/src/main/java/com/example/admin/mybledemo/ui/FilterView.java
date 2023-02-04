@@ -5,8 +5,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.ScanFilter;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,16 +40,16 @@ public class FilterView extends BaseFrameLayout {
     private FilterListener filterListener;
 
 
-    public FilterView(@NonNull Context context) {
+    public FilterView( Context context) {
         super(context);
     }
 
-    public FilterView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public FilterView( Context context,  AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }
 
-    public FilterView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FilterView( Context context,  AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

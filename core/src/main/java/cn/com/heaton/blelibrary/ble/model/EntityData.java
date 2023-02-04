@@ -1,5 +1,7 @@
 package cn.com.heaton.blelibrary.ble.model;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.text.TextUtils;
 
 import cn.com.heaton.blelibrary.ble.exception.BleWriteException;
@@ -16,36 +18,32 @@ public class EntityData {
     //蓝牙设备地址
     private String address;
     //大数据字节数组对象
-    private byte[]data;
+    private byte[] data;
     //每包大小
     private int packLength = DEFAULT_LENGTH;
     //每包发送间隔
     private long delay;
     //最后一包是否自动补零
     private boolean lastPackComplete;
+    private BluetoothGattCharacteristic characteristic;
+    private BluetoothGattDescriptor descriptor;
 
-    public EntityData(boolean autoWriteMode, String address, byte[] data, int packLength, long delay, boolean lastPackComplete) {
+
+    public EntityData(boolean autoWriteMode, String address, byte[] data, int packLength, long delay, boolean lastPackComplete, BluetoothGattCharacteristic characteristic, BluetoothGattDescriptor descriptor) {
         this.autoWriteMode = autoWriteMode;
         this.address = address;
         this.data = data;
         this.packLength = packLength;
         this.delay = delay;
         this.lastPackComplete = lastPackComplete;
+        this.characteristic = characteristic;
+        this.descriptor = descriptor;
     }
 
-    public EntityData(String address, byte[] data, int packLength, long delay, boolean lastPackComplete) {
-        this(false, address, data, packLength, delay, false);
+
+    public EntityData() {
     }
 
-    public EntityData(String address, byte[] data, int packLength, long delay) {
-        this(false, address, data, packLength, delay, false);
-    }
-
-    public EntityData(){}
-
-    public EntityData(String address, byte[] data, int packLength) {
-        this(false, address, data, packLength, 0L, false);
-    }
 
     public boolean isAutoWriteMode() {
         return autoWriteMode;
@@ -64,7 +62,7 @@ public class EntityData {
     }
 
     public byte[] getData() {
-        if(data == null){
+        if (data == null) {
             data = new byte[0];
         }
         return data;
@@ -98,13 +96,23 @@ public class EntityData {
         this.lastPackComplete = lastPackComplete;
     }
 
+    public BluetoothGattCharacteristic getCharacteristic() {
+        return characteristic;
+    }
+
+    public BluetoothGattDescriptor getDescriptor() {
+        return descriptor;
+    }
+
     public static class Builder {
         private boolean autoWriteMode;
         private String address;
-        private byte[]data;
+        private byte[] data;
         private int packLength = DEFAULT_LENGTH;
         private long delay;
         private boolean lastPackComplete;
+        private BluetoothGattCharacteristic characteristic;
+        private BluetoothGattDescriptor descriptor;
 
         public boolean isAutoWriteMode() {
             return autoWriteMode;
@@ -160,23 +168,41 @@ public class EntityData {
             return this;
         }
 
-        public EntityData build(){
-            return new EntityData(autoWriteMode, address, data, packLength, delay, lastPackComplete);
+        public EntityData build() {
+            return new EntityData(autoWriteMode, address, data, packLength, delay, lastPackComplete, characteristic, descriptor);
+        }
+
+        public BluetoothGattDescriptor getDescriptor() {
+            return descriptor;
+        }
+
+        public Builder setDescriptor(BluetoothGattDescriptor descriptor) {
+            this.descriptor = descriptor;
+            return this;
+        }
+
+        public BluetoothGattCharacteristic getCharacteristic() {
+            return characteristic;
+        }
+
+        public Builder setCharacteristic(BluetoothGattCharacteristic characteristic) {
+            this.characteristic = characteristic;
+            return this;
         }
     }
 
     public static void validParms(EntityData entityData) {
         String exception = "";
-        if (TextUtils.isEmpty(entityData.address)){
+        if (TextUtils.isEmpty(entityData.address)) {
             exception = "ble address isn't null";
         }
-        if (entityData.data == null){
-           exception = "ble data isn't null";
+        if (entityData.data == null) {
+            exception = "ble data isn't null";
         }
-        if (entityData.packLength <= 0){
+        if (entityData.packLength <= 0) {
             exception = "The data length per packet cannot be less than 0";
         }
-        if (!TextUtils.isEmpty(exception)){
+        if (!TextUtils.isEmpty(exception)) {
             throw new BleWriteException(exception);
         }
     }

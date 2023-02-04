@@ -6,18 +6,11 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.media.AudioManager;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -28,9 +21,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.admin.mybledemo.BleRssiDevice;
 import com.example.admin.mybledemo.R;
 import com.example.admin.mybledemo.adapter.ScanAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class BleActivity extends AppCompatActivity {
     private boolean isFilter = false;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ble);
         initView();
@@ -238,8 +239,11 @@ public class BleActivity extends AppCompatActivity {
                 }
                 device.setScanRecord(ScanRecord.parseFromBytes(scanRecord));
                 device.setRssi(rssi);
-                bleRssiDevices.add(device);
-                adapter.notifyDataSetChanged();
+                if(!TextUtils.isEmpty(device.getBleName())){
+                    bleRssiDevices.add(device);
+                    adapter.notifyDataSetChanged();
+                }
+
             }
         }
 

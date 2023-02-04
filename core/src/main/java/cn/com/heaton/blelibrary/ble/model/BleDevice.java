@@ -3,8 +3,6 @@ package cn.com.heaton.blelibrary.ble.model;
 import android.bluetooth.BluetoothDevice;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.RestrictTo;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +80,6 @@ public class BleDevice implements Parcelable {
         in.readMap(mPropertyMap, getClass().getClassLoader());
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     public static final Creator<BleDevice> CREATOR = new Creator<BleDevice>() {
         @Override
         public BleDevice createFromParcel(Parcel in) {

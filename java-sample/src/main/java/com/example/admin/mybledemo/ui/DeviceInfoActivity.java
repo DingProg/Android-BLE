@@ -3,26 +3,33 @@ package com.example.admin.mybledemo.ui;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.os.HandlerCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.admin.mybledemo.R;
 import com.example.admin.mybledemo.Utils;
+import com.example.admin.mybledemo.adapter.ChildAdapter;
 import com.example.admin.mybledemo.adapter.DeviceInfoAdapter;
+import com.example.admin.mybledemo.utils.FileUtil;
+import com.example.admin.mybledemo.utils.FileUtils;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import cn.com.heaton.blelibrary.ble.Ble;
-import cn.com.heaton.blelibrary.ble.BleHandler;
 import cn.com.heaton.blelibrary.ble.BleLog;
 import cn.com.heaton.blelibrary.ble.callback.BleConnectCallback;
 import cn.com.heaton.blelibrary.ble.callback.BleNotifyCallback;
@@ -40,8 +47,10 @@ public class DeviceInfoActivity extends AppCompatActivity {
     private DeviceInfoAdapter adapter;
     private List<BluetoothGattService> gattServices;
 
+    private ChildAdapter.FileSelect fileSelect = new ChildAdapter.FileSelect();
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deviceinfo);
         initView();
@@ -62,7 +71,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         gattServices = new ArrayList<>();
-        adapter = new DeviceInfoAdapter(this, gattServices);
+        adapter = new DeviceInfoAdapter(this, gattServices, fileSelect);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         recyclerView.getItemAnimator().setChangeDuration(300);
@@ -145,6 +154,26 @@ public class DeviceInfoActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            Uri result = data.getData();
+//            String path = UriUtils.getPath(this, result);
+//            if(TextUtils.isEmpty(path)){
+//                path = "未获取到文件路径";
+//            }
+//            String path = data.getData().getPath();
+
+            String path = new FileUtils().getPathFromUri(this,data.getData());
+//            String path = FileUtil.getPath(this,data.getData());
+
+            Toast.makeText(this, result.toString(),Toast.LENGTH_SHORT).show();
+
+            fileSelect.notifyListener(path);
+        }
+
     }
 
 

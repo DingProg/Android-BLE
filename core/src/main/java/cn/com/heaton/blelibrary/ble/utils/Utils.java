@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import java.util.HashMap;
@@ -13,6 +12,8 @@ import java.util.List;
 import cn.com.heaton.blelibrary.ble.model.BleDevice;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * description $desc$

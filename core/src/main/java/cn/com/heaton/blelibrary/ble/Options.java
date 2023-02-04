@@ -10,15 +10,12 @@ package cn.com.heaton.blelibrary.ble;
 import android.bluetooth.le.ScanFilter;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.IntRange;
-import android.support.annotation.RequiresApi;
 
 import java.util.UUID;
 
 import cn.com.heaton.blelibrary.ble.callback.wrapper.BleWrapperCallback;
 import cn.com.heaton.blelibrary.ble.model.BleDevice;
 import cn.com.heaton.blelibrary.ble.model.BleFactory;
-import cn.com.heaton.blelibrary.ble.queue.reconnect.IReconnectStrategy;
 
 /**
  * 蓝牙相关参数配置类
@@ -71,7 +68,6 @@ public class Options {
     /**
      * 广播包,厂商id
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public int manufacturerId = 65520; // 0xfff0
 
     /**
@@ -148,7 +144,7 @@ public class Options {
         return connectFailedRetryCount;
     }
 
-    public Options setConnectFailedRetryCount(@IntRange(from = 0, to = 5)int connectFailedRetryCount) {
+    public Options setConnectFailedRetryCount(int connectFailedRetryCount) {
         this.connectFailedRetryCount = connectFailedRetryCount;
         return this;
     }
@@ -157,7 +153,7 @@ public class Options {
         return maxConnectNum;
     }
 
-    public Options setMaxConnectNum(@IntRange(from = 1, to = 7)int maxConnectNum) {
+    public Options setMaxConnectNum(int maxConnectNum) {
         this.maxConnectNum = maxConnectNum;
         return this;
     }
@@ -189,12 +185,12 @@ public class Options {
         return this;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     public int getManufacturerId() {
         return manufacturerId;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     public Options setManufacturerId(int manufacturerId) {
         this.manufacturerId = manufacturerId;
         return this;

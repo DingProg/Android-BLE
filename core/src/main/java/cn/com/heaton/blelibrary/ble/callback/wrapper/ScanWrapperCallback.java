@@ -2,7 +2,7 @@ package cn.com.heaton.blelibrary.ble.callback.wrapper;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+
 
 import cn.com.heaton.blelibrary.ble.model.ScanRecord;
 
@@ -38,6 +38,6 @@ public interface ScanWrapperCallback {
      */
     void onScanFailed(int errorCode);
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     void onParsedData(BluetoothDevice device, ScanRecord scanRecord);
 }

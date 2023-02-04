@@ -1,6 +1,6 @@
 package cn.com.heaton.blelibrary.ble.queue;
 
-import android.support.annotation.NonNull;
+
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public final class WriteQueue extends Queue{
         bleRequest = BleRequestImpl.getBleRequest();
     }
 
-    @NonNull
+
     public static WriteQueue getInstance() {
         if (sInstance != null) {
             return sInstance;

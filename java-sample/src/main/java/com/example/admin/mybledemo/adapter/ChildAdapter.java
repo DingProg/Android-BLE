@@ -1,12 +1,13 @@
 package com.example.admin.mybledemo.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import android.content.Intent;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +18,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import com.example.admin.mybledemo.R;
+import com.example.admin.mybledemo.SendData;
 import com.example.admin.mybledemo.Utils;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import cn.com.heaton.blelibrary.ble.Ble;
@@ -37,8 +48,34 @@ import cn.com.heaton.blelibrary.ble.utils.ThreadUtils;
 
 public class ChildAdapter extends RecyclerAdapter<BluetoothGattCharacteristic> {
 
-    public ChildAdapter(Context context, List<BluetoothGattCharacteristic> datas) {
+    public interface Listener{
+        void onSelectFile(String path);
+    }
+
+    public static class FileSelect{
+        private final Set<Listener> fileSelects = new HashSet<>();
+
+        public void notifyListener(String path){
+            for (Listener fileSelect : fileSelects) {
+                fileSelect.onSelectFile(path);
+            }
+        }
+
+        void register(Listener listener){
+            fileSelects.add(listener);
+        }
+
+        void remove(Listener listener){
+            fileSelects.remove(listener);
+        }
+    }
+
+    private final FileSelect select;
+    private String filePath;
+
+    public ChildAdapter(Context context, List<BluetoothGattCharacteristic> datas, FileSelect fileSelect) {
         super(context, R.layout.item_deviceinfo_child, datas);
+        this.select = fileSelect;
     }
 
     @Override
@@ -257,17 +294,56 @@ public class ChildAdapter extends RecyclerAdapter<BluetoothGattCharacteristic> {
 
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "MissingInflatedId"})
     private void showWriteDialog(BluetoothGattCharacteristic characteristic, BluetoothGattDescriptor descriptor){
-        final EditText edit = new EditText(mContext);
-        edit.setHintTextColor(ContextCompat.getColor(mContext, R.color.text));
-        edit.setHint("New value");
+        View view  = LayoutInflater.from(mContext).inflate(R.layout.file_content, null,false);
+
+        TextView tvFileName = view.findViewById(R.id.tvFileName);
+        view.findViewById(R.id.selectFile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Log.i("test", "  TextView tvFileName = view.findViewById(R.id.tvFileName)");
+//                 new ChooserDialog(((Activity) mContext))
+////                         .titleFollowsDir(true)
+////                         .displayPath(true)
+////                         .withFilter(false, true, "txt", "bin")
+//                         .withChosenListener(new ChooserDialog.Result() {
+//                             @Override
+//                             public void onChoosePath(String path, File pathFile) {
+//                                 Toast.makeText(mContext, "FOLDER: " + path, Toast.LENGTH_SHORT).show();
+//                             }
+//                         })
+//                         .build()
+//                         .show();
+
+                Listener listener = new Listener() {
+                    @Override
+                    public void onSelectFile(String path) {
+                        tvFileName.setText("已经选择");
+                        filePath = path;
+                        select.remove(this);
+                    }
+                };
+                select.register(listener);
+
+                Intent selectFile = new Intent(Intent.ACTION_GET_CONTENT);
+                selectFile.setType("*/*");
+                selectFile = Intent.createChooser(selectFile, "Choose a file");
+                ((Activity) mContext).startActivityForResult(selectFile, 1);
+            }
+        });
+
+        EditText etSize = view.findViewById(R.id.etSize);
+        EditText etTime = view.findViewById(R.id.etTime);
+
         AlertDialog alertDialog = new AlertDialog.Builder(mContext)
                 .setTitle("Write value")
                 .setPositiveButton("SEND",null)
                 .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss())
-                .setView(edit, Utils.dp2px(20), 0, Utils.dp2px(20), 0)
+                .setView(view, Utils.dp2px(20), 0, Utils.dp2px(20), 0)
                 .create();
+
+
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -275,19 +351,32 @@ public class ChildAdapter extends RecyclerAdapter<BluetoothGattCharacteristic> {
                 btnPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (TextUtils.isEmpty(edit.getText().toString())){
-                            edit.requestFocus();
-                            edit.setError("值不能为空!");
-                        }else {
-                            try {
-                                write(characteristic, descriptor, ByteUtils.hexStr2Bytes(edit.getText().toString().trim()));
-                                dialog.dismiss();
-                            }catch (NumberFormatException e){
-                                e.printStackTrace();
-                                edit.requestFocus();
-                                edit.setError("请输入十六进制字符!");
-                            }
+//                        if (TextUtils.isEmpty(edit.getText().toString())){
+//                            edit.requestFocus();
+//                            edit.setError("值不能为空!");
+//                        }else {
+//                            try {
+//                                write(characteristic, descriptor, ByteUtils.hexStr2Bytes(edit.getText().toString().trim()));
+//                                dialog.dismiss();
+//                            }catch (NumberFormatException e){
+//                                e.printStackTrace();
+//                                edit.requestFocus();
+//                                edit.setError("请输入十六进制字符!");
+//                            }
+//                        }
+                        List<BleDevice> connetedDevices = Ble.getInstance().getConnectedDevices();
+
+
+                        if (!connetedDevices.isEmpty()){
+                            BleDevice bleDevice = connetedDevices.get(0);
+                            new SendData(((Activity) mContext), bleDevice, Integer.parseInt(etSize.getText().toString()),
+                                    Integer.parseInt(etTime.getText().toString()), characteristic, descriptor,
+                                    filePath).sendEntityData(false);
+                            dialog.dismiss();
+                        }else{
+                            toast("无连接或者断开");
                         }
+
                     }
                 });
             }

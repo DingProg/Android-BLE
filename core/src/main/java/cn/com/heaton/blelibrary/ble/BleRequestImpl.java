@@ -28,7 +28,8 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.os.HandlerCompat;
+
+import androidx.core.os.HandlerCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

@@ -2,13 +2,14 @@ package com.example.admin.mybledemo.adapter;
 
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.admin.mybledemo.R;
 import com.example.admin.mybledemo.Utils;
@@ -20,21 +21,23 @@ public class DeviceInfoAdapter extends RecyclerView.Adapter<DeviceInfoAdapter.Vi
     private Context context;
     private List<BluetoothGattService> gattServices;
     private int opened = -1;
+    private ChildAdapter.FileSelect fileSelect;
 
-    public DeviceInfoAdapter(Context context, List<BluetoothGattService> gattServices){
+    public DeviceInfoAdapter(Context context, List<BluetoothGattService> gattServices, ChildAdapter.FileSelect fileSelect){
         this.context = context;
         this.gattServices = gattServices;
+        this.fileSelect = fileSelect;
     }
 
-    @NonNull
+
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder( ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_device_info, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder( ViewHolder viewHolder, int position) {
         BluetoothGattService gattService = gattServices.get(position);
         String uuid = gattService.getUuid().toString();
         viewHolder.tvServiceUuid.setText(Utils.getUuid(uuid));
@@ -62,7 +65,7 @@ public class DeviceInfoAdapter extends RecyclerView.Adapter<DeviceInfoAdapter.Vi
             }
         });
 
-        ChildAdapter adapter = new ChildAdapter(context, gattService.getCharacteristics());
+        ChildAdapter adapter = new ChildAdapter(context, gattService.getCharacteristics(),fileSelect);
         viewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         viewHolder.recyclerView.setAdapter(adapter);
 
@@ -79,7 +82,7 @@ public class DeviceInfoAdapter extends RecyclerView.Adapter<DeviceInfoAdapter.Vi
         RecyclerView recyclerView;
 
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder( View itemView) {
             super(itemView);
             tvServiceUuid = itemView.findViewById(R.id.tv_service_uuid);
             tvServiceType = itemView.findViewById(R.id.tv_type);

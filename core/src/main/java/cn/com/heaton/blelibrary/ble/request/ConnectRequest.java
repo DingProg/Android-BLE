@@ -1,7 +1,7 @@
 package cn.com.heaton.blelibrary.ble.request;
 
 import android.bluetooth.BluetoothGatt;
-import android.support.annotation.RestrictTo;
+
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -166,7 +166,7 @@ public class ConnectRequest<T extends BleDevice> implements ConnectWrapperCallba
      * 兼容原生android系统直接断开系统蓝牙导致的异常
      * 直接断开系统蓝牙不回调onConnectionStateChange接口问题
      */
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+
     public void closeBluetooth(){
         if (!connectedDevices.isEmpty()){
             for (T device: connectedDevices.values()) {

@@ -1,7 +1,7 @@
 package cn.com.heaton.blelibrary.ble.callback;
 
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+
 
 import cn.com.heaton.blelibrary.ble.model.ScanRecord;
 
@@ -37,6 +37,6 @@ public abstract class BleScanCallback<T> {
      */
     public void onScanFailed(int errorCode){}
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     public void onParsedData(T device, ScanRecord scanRecord){}
 }

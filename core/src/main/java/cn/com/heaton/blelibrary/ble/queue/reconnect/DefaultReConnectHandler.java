@@ -1,6 +1,6 @@
 package cn.com.heaton.blelibrary.ble.queue.reconnect;
 
-import android.support.annotation.RestrictTo;
+
 import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -102,7 +102,7 @@ public class DefaultReConnectHandler<T extends BleDevice> extends BleConnectCall
     /**
      * 打开蓝牙后,重新连接异常断开时的设备
      */
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+
     public void openBluetooth(){
         BleLog.i(TAG, "auto devices size："+autoDevices.size());
         for (T device: autoDevices) {

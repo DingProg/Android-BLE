@@ -3,7 +3,7 @@ package cn.com.heaton.blelibrary.ble.utils;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.RestrictTo;
+
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -17,7 +17,7 @@ import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
  *
  * Created by LiuLei on 16/10/28.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+
 public class ThreadUtils {
 
     private static ExecutorService executorService = Executors.newCachedThreadPool();

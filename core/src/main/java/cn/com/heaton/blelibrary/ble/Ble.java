@@ -22,9 +22,6 @@ import android.bluetooth.le.ScanFilter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.IntRange;
-import android.support.annotation.RequiresApi;
 
 import java.util.Collection;
 import java.util.List;
@@ -381,7 +378,7 @@ public final class Ble<T extends BleDevice> {
      * @param callback 发送结果回调
      * @deprecated Use {@link Ble#writeEntity(EntityData, BleWriteEntityCallback)} instead.
      */
-    public void writeEntity(T device, final byte[]data, @IntRange(from = 1,to = 512)int packLength, int delay, BleWriteEntityCallback<T> callback){
+    public void writeEntity(T device, final byte[]data, int packLength, int delay, BleWriteEntityCallback<T> callback){
         request.writeEntity(device, data, packLength, delay, callback);
     }
 
