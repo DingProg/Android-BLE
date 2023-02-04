@@ -26,7 +26,6 @@ import androidx.core.content.ContextCompat;
 import com.example.admin.mybledemo.R;
 import com.example.admin.mybledemo.SendData;
 import com.example.admin.mybledemo.Utils;
-import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
