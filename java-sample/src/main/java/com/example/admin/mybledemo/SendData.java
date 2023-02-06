@@ -158,10 +158,10 @@ public class SendData {
                 .setAutoWriteMode(autoWriteMode)
                 .setAddress(bleDevice.getBleAddress())
                 .setData(data)
-                .setPackLength(20)
+                .setPackLength(length)
                 .setCharacteristic(characteristic)
                 .setDescriptor(descriptor)
-                .setDelay(50L)
+                .setDelay(time)
                 .build();
     }
 

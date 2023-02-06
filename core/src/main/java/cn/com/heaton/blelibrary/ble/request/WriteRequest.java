@@ -2,6 +2,7 @@ package cn.com.heaton.blelibrary.ble.request;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.util.Log;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -138,6 +139,9 @@ public class WriteRequest<T extends BleDevice> implements WriteWrapperCallback<T
                     } else {
                         result = bleRequest.writeDescriptor(address, txBuffer, serviceUuid, characteristicUuid, finalDescriptorUUID);
                     }
+//                    Log.d("SendData", "packLength="+packLength);
+//                    Log.d("SendData", "txBuffer="+txBuffer.length);
+//                    Log.d("SendData", "availableLength="+availableLength);
                     if (!result) {
                         if (bleWriteEntityCallback != null) {
                             bleWriteEntityCallback.onWriteFailed();
@@ -151,11 +155,15 @@ public class WriteRequest<T extends BleDevice> implements WriteWrapperCallback<T
                             bleWriteEntityCallback.onWriteProgress(progress);
                         }
                     }
+
+
                     if (autoWriteMode) {
+                        Log.d("SendData", "wait autoWriteMode="+delay);
                         synchronized (lock) {
                             lock.wait(500);
                         }
                     } else {
+                        Log.d("SendData", "wait Thread="+delay);
                         try {
                             Thread.sleep(delay);
                         } catch (InterruptedException e) {
