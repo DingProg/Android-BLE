@@ -298,27 +298,14 @@ public class ChildAdapter extends RecyclerAdapter<BluetoothGattCharacteristic> {
         View view  = LayoutInflater.from(mContext).inflate(R.layout.file_content, null,false);
 
         TextView tvFileName = view.findViewById(R.id.tvFileName);
+        view.findViewById(R.id.sendText).setOnClickListener(v -> sendText(characteristic, descriptor));
         view.findViewById(R.id.selectFile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.i("test", "  TextView tvFileName = view.findViewById(R.id.tvFileName)");
-//                 new ChooserDialog(((Activity) mContext))
-////                         .titleFollowsDir(true)
-////                         .displayPath(true)
-////                         .withFilter(false, true, "txt", "bin")
-//                         .withChosenListener(new ChooserDialog.Result() {
-//                             @Override
-//                             public void onChoosePath(String path, File pathFile) {
-//                                 Toast.makeText(mContext, "FOLDER: " + path, Toast.LENGTH_SHORT).show();
-//                             }
-//                         })
-//                         .build()
-//                         .show();
-
                 Listener listener = new Listener() {
                     @Override
                     public void onSelectFile(String path) {
-                        tvFileName.setText("已经选择");
+                        tvFileName.setText("文件已经选择");
                         filePath = path;
                         select.remove(this);
                     }
@@ -350,21 +337,7 @@ public class ChildAdapter extends RecyclerAdapter<BluetoothGattCharacteristic> {
                 btnPositive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        if (TextUtils.isEmpty(edit.getText().toString())){
-//                            edit.requestFocus();
-//                            edit.setError("值不能为空!");
-//                        }else {
-//                            try {
-//                                write(characteristic, descriptor, ByteUtils.hexStr2Bytes(edit.getText().toString().trim()));
-//                                dialog.dismiss();
-//                            }catch (NumberFormatException e){
-//                                e.printStackTrace();
-//                                edit.requestFocus();
-//                                edit.setError("请输入十六进制字符!");
-//                            }
-//                        }
                         List<BleDevice> connetedDevices = Ble.getInstance().getConnectedDevices();
-
 
                         if (!connetedDevices.isEmpty()){
                             BleDevice bleDevice = connetedDevices.get(0);
@@ -376,6 +349,46 @@ public class ChildAdapter extends RecyclerAdapter<BluetoothGattCharacteristic> {
                             toast("无连接或者断开");
                         }
 
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+    }
+
+
+    @SuppressLint("RestrictedApi")
+    private void sendText(BluetoothGattCharacteristic characteristic, BluetoothGattDescriptor descriptor){
+        final EditText edit = new EditText(mContext);
+        edit.setHintTextColor(ContextCompat.getColor(mContext, R.color.text));
+        edit.setHint("New value");
+        edit.setText("017B64");
+        AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+                .setTitle("Write value")
+                .setPositiveButton("SEND",null)
+                .setNegativeButton("CANCEL", (dialog, which) -> dialog.dismiss())
+                .setView(edit, Utils.dp2px(20), 0, Utils.dp2px(20), 0)
+                .create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button btnPositive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                btnPositive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (TextUtils.isEmpty(edit.getText().toString())){
+                            edit.requestFocus();
+                            edit.setError("值不能为空!");
+                        }else {
+                            try {
+                                write(characteristic, descriptor, ByteUtils.hexStr2Bytes(edit.getText().toString().trim()));
+                                dialog.dismiss();
+                            }catch (NumberFormatException e){
+                                e.printStackTrace();
+                                edit.requestFocus();
+                                edit.setError("请输入十六进制字符!");
+                            }
+                        }
                     }
                 });
             }
