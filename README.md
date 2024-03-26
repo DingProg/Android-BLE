@@ -1,7 +1,4 @@
 
-### 个人项目或者定制化需求加v:liulei633001 进行联系，如果需要单独咨询相关问题，记得先请喝杯咖啡哦！！！
-### Email：jerryee0911@qq.com
-
 ### 扫描下载APK:
 ![二维码.png](https://github.com/aicareles/Android-BLE/blob/master/screenshots/download.png)
 
@@ -295,11 +292,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
-## Contribute：
-![](https://upload-images.jianshu.io/upload_images/3884117-5d22ae84180a93ed.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320)
-![](https://upload-images.jianshu.io/upload_images/3884117-1f6c1c0fb5885252.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320)
-
 
 
 
